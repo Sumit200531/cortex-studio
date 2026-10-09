@@ -1,0 +1,15 @@
+{
+  "name": "cortex-studio",
+  "version": "1.0.0",
+  "description": "Turn any topic or your notes into a living 3D concept map you can explore, expand, quiz yourself on and chat with. Runs on free open-source AI models via Ollama or any OpenAI-compatible API.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["ai", "ollama", "open-source-llm", "concept-map", "study", "threejs", "webgl", "education"],
+  "license": "MIT"
+}
