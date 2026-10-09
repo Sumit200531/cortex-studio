@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Cortex Studio turns any topic or your notes into a living 3D concept map you can explore, expand, quiz yourself on and chat with. Runs on free open-source AI models.">
+<meta name="theme-color" content="#04070a">
+<title>Cortex Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.6" fill="#5fd3c3"/><circle cx="4" cy="6" r="1.6" fill="#ebe5da"/><circle cx="20" cy="5" r="1.6" fill="#ebe5da"/><circle cx="19" cy="19" r="1.6" fill="#f3a75b"/><circle cx="5" cy="18" r="1.6" fill="#ebe5da"/><path d="M4 6l8 6 8-7M12 12l7 7M12 12l-7 6" stroke="#ebe5da" stroke-opacity=".5" stroke-width="1"/></svg>Cortex</a>
+  <div class="nav-links"><a href="#read">How it works</a><a href="#recall">Why it works</a><a class="open" href="#studio">Open studio</a></div>
+</nav>
+
+<main class="story" id="top">
+  <section class="scene hero" data-scene="0">
+    <div class="copy">
+      <p class="kicker"><span>AI study studio</span><span class="tc">Scene 01</span></p>
+      <h1>Cor<span class="dim">tex</span></h1>
+      <p class="lede">Type any topic or paste your notes. Cortex builds a living map of the ideas, explains any part of it, grows the branches you're curious about, and quizzes you until the whole map glows.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#studio">Open the studio <span aria-hidden="true">→</span></a>
+        <a class="btn ghost" href="#read">See how it works</a>
+      </div>
+      <div class="facts">
+        <div><b>~20</b>concepts per map</div>
+        <div><b>3</b>ways to learn each one</div>
+        <div><b>1</b>map that grows with you</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="read" data-scene="1">
+    <div class="copy">
+      <p class="step"><b>01</b> &nbsp;Read</p>
+      <h2 class="scramble">It reads like a <em>tutor</em> would</h2>
+      <p class="body">Paste a textbook chapter, a lecture transcript, or just ask a question. Cortex looks for the handful of ideas everything else depends on, and the details that hang from each of them.</p>
+      <p class="cite">Input: a topic, or up to ~6,000 words of notes</p>
+    </div>
+  </section>
+
+  <section class="scene" id="connect" data-scene="2">
+    <div class="copy">
+      <p class="step"><b>02</b> &nbsp;Connect</p>
+      <h2 class="scramble">Ideas become <em>neurons</em></h2>
+      <p class="body">Each concept becomes a node, and every relationship becomes a link you can follow. The structure a good student builds over weeks appears in seconds. Pick any node to get a plain-language explanation, or have the AI grow new branches from it.</p>
+      <p class="cite">Explain · Expand · Ask anything about the map</p>
+    </div>
+  </section>
+
+  <section class="scene" id="recall" data-scene="3">
+    <div class="copy">
+      <p class="step"><b>03</b> &nbsp;Recall</p>
+      <h2 class="scramble">Rereading feels like learning. <em>Recalling is.</em></h2>
+      <p class="body">Memory researchers call it the testing effect: pulling an answer out of your head strengthens it far more than reading it again. Cortex writes quizzes from your map and lights up each concept in amber once you've got it right.</p>
+      <p class="cite">Roediger &amp; Karpicke, Psychological Science, 2006</p>
+    </div>
+  </section>
+</main>
+
+<section class="studio" id="studio" aria-label="Cortex studio">
+  <div class="studio-head">
+    <div>
+      <h3>The studio</h3>
+      <div class="sub" id="aiState">Connecting…</div>
+    </div>
+    <div class="composer">
+      <div class="inbox">
+        <label for="topic" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Topic or notes</label>
+        <textarea id="topic" rows="1" placeholder="A topic to learn, or paste your notes…">How black holes form</textarea>
+        <div class="mode">
+          <div class="seg" role="group" aria-label="Map quality">
+            <button type="button" id="mFast" aria-pressed="true" title="Faster, lighter map">Fast</button>
+            <button type="button" id="mDeep" aria-pressed="false" title="Slower, more careful map">Deep</button>
+          </div>
+        </div>
+        <button class="gen" id="genBtn" type="button"><span id="genLabel">Build map</span></button>
+      </div>
+      <div class="chips" id="chips"><span class="lbl">Try</span></div>
+    </div>
+  </div>
+
+  <div class="studio-body">
+    <div class="stage" id="stage">
+      <canvas id="graph" aria-label="Concept map. Use the concept labels to select a node."></canvas>
+      <div class="labels" id="labels"></div>
+      <div class="status" id="status"><span class="pulse"></span><span id="statusText">Example map loaded</span></div>
+      <div class="legend" aria-hidden="true">
+        <span>Core idea<i style="background:#f3a75b;box-shadow:0 0 8px #f3a75b"></i></span>
+        <span>Key concept<i style="background:#5fd3c3"></i></span>
+        <span>Detail<i style="background:#ebe5da;opacity:.7"></i></span>
+      </div>
+      <div class="hud">
+        <span class="stat"><b id="nCount">0</b> concepts · <b id="eCount">0</b> links<br>Drag to orbit · scroll to zoom</span>
+        <span class="mastery">Mastery <span class="mbar"><i id="mFill"></i></span> <b id="mText">0/0</b></span>
+      </div>
+    </div>
+
+    <aside class="inspector" aria-label="Inspector">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tConcept" aria-selected="true" aria-controls="pConcept">Concept</button>
+        <button class="tab" role="tab" id="tQuiz" aria-selected="false" aria-controls="pQuiz">Quiz</button>
+        <button class="tab" role="tab" id="tAsk" aria-selected="false" aria-controls="pAsk">Ask</button>
+      </div>
+      <div class="pane" id="pConcept" role="tabpanel"></div>
+      <div class="pane" id="pQuiz" role="tabpanel" hidden></div>
+      <div class="pane" id="pAsk" role="tabpanel" hidden>
+        <div class="chat">
+          <div class="msgs" id="msgs" aria-live="polite"></div>
+          <div class="sugg" id="sugg"></div>
+          <form class="ask" id="askForm"><label for="askIn" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ask about the map</label><input id="askIn" placeholder="Ask anything about this map…" autocomplete="off"><button type="submit">Ask</button></form>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<footer class="footer"><span>Cortex Studio · Runs on free, open-source models. AI answers can be wrong, so check anything important.</span><span>Maps you build are kept in this browser.</span></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/GammaCorrectionShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="js/core.js"></script>
+<script src="js/background.js"></script>
+<script src="js/studio.js"></script>
+
+</body>
+</html>
